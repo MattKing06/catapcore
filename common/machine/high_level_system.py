@@ -1,14 +1,14 @@
 """
-CATAP High-Level System Module
+catapcore High-Level System Module
 
 This module defines a base class for interacting with a group of hardware objects pertaining to a common system.
 
 Classes:
-    - :class:`~CATAP.common.constants.machine.high_level_system.HighLevelSystem`: Base class\
+    - :class:`~catapcore.common.constants.machine.high_level_system.HighLevelSystem`: Base class\
     for high-level systems.
-    - :class:`~CATAP.common.constants.machine.high_level_system.HighLevelSystemComponents`: Base class\
+    - :class:`~catapcore.common.constants.machine.high_level_system.HighLevelSystemComponents`: Base class\
     for high-level system components.
-    - :class:`~CATAP.common.constants.machine.high_level_system.HighLevelSystemProperties`: Base class\
+    - :class:`~catapcore.common.constants.machine.high_level_system.HighLevelSystemProperties`: Base class\
     for high-level system properties.
 """
 
@@ -17,9 +17,9 @@ import warnings
 from pydantic import BaseModel, ConfigDict, field_validator
 from typing import Any, ClassVar, Dict, List
 from ruamel.yaml import YAML
-from CATAP.common.exceptions import InvalidSnapshotSetting
-from CATAP.common.machine.hardware import Hardware
-from CATAP.config import LATTICE_LOCATION
+from catapcore.common.exceptions import InvalidSnapshotSetting
+from catapcore.common.machine.hardware import Hardware
+from catapcore.config import LATTICE_LOCATION
 
 __all__ = ["HighLevelSystem", "HighLevelSystemComponents", "HighLevelSystemProperties"]
 
@@ -30,11 +30,11 @@ class HighLevelSystemProperties(BaseModel):
     """
 
     name: str
-    """Name of :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object"""
+    """Name of :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object"""
     hardware_type: str
-    """Type of :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object"""
+    """Type of :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object"""
     aliases: List[str]
-    """Alias names for :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object"""
+    """Alias names for :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object"""
     model_config = ConfigDict(
         extra="allow",
         frozen=True,
@@ -43,8 +43,8 @@ class HighLevelSystemProperties(BaseModel):
 
 class HighLevelSystemComponents(BaseModel):
     """
-    Base class for defining the sub-components (:class:`~CATAP.common.machine.hardware.Hardware` objects)
-    of a :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object.
+    Base class for defining the sub-components (:class:`~catapcore.common.machine.hardware.Hardware` objects)
+    of a :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object.
     """
 
     is_virtual: ClassVar[bool]
@@ -79,15 +79,15 @@ class HighLevelSystemComponents(BaseModel):
         T: Hardware,
     ) -> Hardware:
         """
-        Instantiate :class:`~CATAP.common.machine.hardware.Hardware` objects.
+        Instantiate :class:`~catapcore.common.machine.hardware.Hardware` objects.
 
-        :param name: Name of :class:`~CATAP.common.machine.hardware.Hardware` object
+        :param name: Name of :class:`~catapcore.common.machine.hardware.Hardware` object
         :type name: str
-        :param T: Specific :class:`~CATAP.common.machine.hardware.Hardware` class type
-        :type T: Type[:class:`~CATAP.common.machine.hardware.Hardware`]
+        :param T: Specific :class:`~catapcore.common.machine.hardware.Hardware` class type
+        :type T: Type[:class:`~catapcore.common.machine.hardware.Hardware`]
 
         :returns: Hardware object
-        :rtype: :class:`~CATAP.common.machine.hardware.Hardware`
+        :rtype: :class:`~catapcore.common.machine.hardware.Hardware`
         """
         config_file = name + ".yaml"
         config_location = os.path.join(LATTICE_LOCATION, T.__name__, config_file)
@@ -107,8 +107,8 @@ class HighLevelSystemComponents(BaseModel):
 
     def create_snapshot(self):
         """
-        Create full snapshot of :class:`~CATAP.common.machine.hardware.Hardware` objects
-        (see :func:`~CATAP.common.machine.hardware.Hardware.create_snapshot`)
+        Create full snapshot of :class:`~catapcore.common.machine.hardware.Hardware` objects
+        (see :func:`~catapcore.common.machine.hardware.Hardware.create_snapshot`)
         """
         snapshot: Dict[str, Dict[str, Any]] = {}
         # Go through the set fields and look for Hardware objects
@@ -144,13 +144,13 @@ class HighLevelSystemComponents(BaseModel):
         component: Hardware,
     ) -> None:
         """
-        Apply snapshot to a sub-component of the :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object
-        (see :func:`~CATAP.common.machine.hardware.Hardware.apply_snapshot`)
+        Apply snapshot to a sub-component of the :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
+        (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param snapshot: Snapshot dictionary to apply
         :param component: Hardware object to which the snapshot should be applied
         :type snapshot: Dict[str, Dict[str, Any]]
-        :type component: :class:`~CATAP.common.machine.hardware.Hardware`
+        :type component: :class:`~catapcore.common.machine.hardware.Hardware`
         """
         try:
             settings = snapshot[component.name]
@@ -169,8 +169,8 @@ class HighLevelSystemComponents(BaseModel):
         self, snapshot: Dict[str, Dict[str, Any]], apply_to: List[str] = None
     ):
         """
-        Apply snapshot to the entire :class:`~CATAP.common.machine.high_level_system.HighLevelSystem` object
-        (see :func:`~CATAP.common.machine.hardware.Hardware.apply_snapshot`)
+        Apply snapshot to the entire :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
+        (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param snapshot: Snapshot dictionary to apply
         :param apply_to: Hardware objects to which the snapshot should be applied (apply to all if `None`)
@@ -218,7 +218,7 @@ class HighLevelSystemComponents(BaseModel):
 
 class HighLevelSystem(BaseModel):
     """
-    Base class for grouping together multiple sub-components (:class:`~CATAP.common.machine.hardware.Hardware` objects).
+    Base class for grouping together multiple sub-components (:class:`~catapcore.common.machine.hardware.Hardware` objects).
     """
 
     is_virtual: ClassVar[bool]
@@ -226,7 +226,7 @@ class HighLevelSystem(BaseModel):
     connect_on_creation: ClassVar[bool]
     """Flag to connect automatically to PVs when created"""
     components: HighLevelSystemComponents
-    """Sub-components (:class:`~CATAP.common.machine.hardware.Hardware` objects)"""
+    """Sub-components (:class:`~catapcore.common.machine.hardware.Hardware` objects)"""
     properties: HighLevelSystemProperties
     """Metadata for the high-level system"""
     model_config = ConfigDict(
@@ -300,7 +300,7 @@ class HighLevelSystem(BaseModel):
     ]:
         """
         Create snapshot for the high-level system object
-        (see :func:`~CATAP.common.machine.high_level_system.HighLevelSystemComponents.create_snapshot`)
+        (see :func:`~catapcore.common.machine.high_level_system.HighLevelSystemComponents.create_snapshot`)
 
         :returns: Type
         :rtype: str
@@ -312,7 +312,7 @@ class HighLevelSystem(BaseModel):
     ) -> None:
         """
         Apply snapshot for the high-level system object
-        (see :func:`~CATAP.common.machine.high_level_system.HighLevelSystemComponents.apply_snapshot`)
+        (see :func:`~catapcore.common.machine.high_level_system.HighLevelSystemComponents.apply_snapshot`)
 
         :returns: Type
         :rtype: str

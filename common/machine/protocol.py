@@ -18,8 +18,8 @@ from p4p.nt.ndarray import ntndarray
 from p4p.nt.scalar import ntbool, ntfloat, ntint, ntnumericarray, ntstr, ntstringarray
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from CATAP.common.exceptions import FailedEPICSOperationWarning
-from CATAP.config import EPICS_TIMEOUT
+from catapcore.common.exceptions import FailedEPICSOperationWarning
+from catapcore.config import EPICS_TIMEOUT
 
 
 class Protocol(BaseModel, ABC):

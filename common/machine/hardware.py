@@ -1,15 +1,15 @@
 """
-CATAP Hardware Module
+catapcore Hardware Module
 
 This module defines a base class for interacting with specific hardware objects via the control system.
 
 Classes:
-    - :class:`~CATAP.common.constants.machine.hardware.PVMap`: Base class for creating a map of EPICS PVs.
-    - :class:`~CATAP.common.constants.machine.hardware.ControlsInformation`: Base class for accessing\
+    - :class:`~catapcore.common.constants.machine.hardware.PVMap`: Base class for creating a map of EPICS PVs.
+    - :class:`~catapcore.common.constants.machine.hardware.ControlsInformation`: Base class for accessing\
     PVs stored in the `~PVMap` and controlling the object
-    - :class:`~CATAP.common.constants.machine.hardware.Properties`: Base class for defining and accessing metadata\
+    - :class:`~catapcore.common.constants.machine.hardware.Properties`: Base class for defining and accessing metadata\
     and information not defined directly in the controls system.
-    - :class:`~CATAP.common.constants.machine.hardware.Hardware`: Base class defining middle-layer\
+    - :class:`~catapcore.common.constants.machine.hardware.Hardware`: Base class defining middle-layer\
     functions for accessing the controls system.
 """
 
@@ -19,9 +19,9 @@ from pydantic import (
     SerializeAsAny,
     field_validator,
 )
-from CATAP.config import MACHINE_AREAS
+from catapcore.config import MACHINE_AREAS
 from typing import Any, ClassVar, Dict, List, Union, Type, Callable
-from CATAP.common.machine.pv_utils import (
+from catapcore.common.machine.pv_utils import (
     BinaryPV,
     PVInfo,
     ScalarPV,
@@ -31,8 +31,8 @@ from CATAP.common.machine.pv_utils import (
     WaveformPV,
 )
 from epics import ca
-from CATAP.common.machine.area import MachineArea
-from CATAP.common.exceptions import (
+from catapcore.common.machine.area import MachineArea
+from catapcore.common.exceptions import (
     InvalidSnapshotSetting,
     UnexpectedPVEntry,
 )
@@ -53,7 +53,7 @@ __all__ = [
 
 class PVMap(BaseModel):
     """
-    Base class for creating a map of EPICS PVs (see :mod:`~CATAP.common.machine.pv_utils`).
+    Base class for creating a map of EPICS PVs (see :mod:`~catapcore.common.machine.pv_utils`).
     """
 
     is_virtual: ClassVar[bool]
@@ -62,7 +62,7 @@ class PVMap(BaseModel):
     """Option to connect automatically to PVs when created"""
     _statistics: Dict[str, StatisticalPV]
     """Dictionary of StatisticalPV types for calculating statistics
-    (see :class:`~CATAP.common.machine.pv_utils.StatisticalPV`)"""
+    (see :class:`~catapcore.common.machine.pv_utils.StatisticalPV`)"""
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         extra="allow",
@@ -139,7 +139,7 @@ class PVMap(BaseModel):
     @property
     def statistics(self) -> Dict[str, StatisticalPV]:
         """
-        Return a dictionary containing the :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types in the map.
+        Return a dictionary containing the :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types in the map.
 
         :returns: Dict[str, StatisticalPV]
         """
@@ -152,7 +152,7 @@ class PVMap(BaseModel):
         str, BinaryPV | ScalarPV | StatePV | StatisticalPV | StringPV | WaveformPV
     ]:
         """
-        Return a dictionary of all PVs in the map (see :mod:`~CATAP.common.machine.pv_utils`).
+        Return a dictionary of all PVs in the map (see :mod:`~catapcore.common.machine.pv_utils`).
 
         :returns: Dict[str, PVSignal]
         """
@@ -164,9 +164,9 @@ class PVMap(BaseModel):
         """
         Check if the statistics buffer is full (i.e. if `len(PV.buffer) == PV.buffer_size)`.
 
-        See :attr:`~CATAP.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
+        See :attr:`~catapcore.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
         :type names: Union[str, List[str], None]
         :returns: True if buffer is full
         :rtype: bool | Dict[str, bool]
@@ -186,7 +186,7 @@ class PVMap(BaseModel):
         """
         Clears the statistics buffers.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
         :type names: Union[str, List[str], None]
         """
         if isinstance(names, str):
@@ -201,7 +201,7 @@ class PVMap(BaseModel):
         """
         Sets the size of the statistics buffers.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
         :param size: Size of statistics buffer
         :type names: Union[str, List[str], None]
         :type size: int
@@ -216,9 +216,9 @@ class PVMap(BaseModel):
 
     def start_buffering(self, names: Union[str, List[str], None]) -> None:
         """
-        Starts buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Starts buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
         :type names: Union[str, List[str], None]
         """
         if isinstance(names, str):
@@ -231,9 +231,9 @@ class PVMap(BaseModel):
 
     def stop_buffering(self, names: Union[str, List[str], None]) -> None:
         """
-        Stops buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Stops buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
         :type names: Union[str, List[str], None]
         """
         if isinstance(names, str):
@@ -297,7 +297,7 @@ class ControlsInformation(BaseModel):
     @property
     def statistics(self) -> Dict[str, StatisticalPV]:
         """
-        Returns all :class:`~CATAP.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
+        Returns all :class:`~catapcore.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
 
         :returns: Dict[str, StatisticalPV]
         """
@@ -309,9 +309,9 @@ class ControlsInformation(BaseModel):
         """
         Check if the statistics buffer is full (i.e. if `len(PV.buffer) == PV.buffer_size)`.
 
-        See :attr:`~CATAP.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
+        See :attr:`~catapcore.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
 
-        :param name: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
+        :param name: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
         :type name: Union[str, List[str], None]
         :returns: True if buffer is full
         :rtype: bool | Dict[str, bool]
@@ -322,7 +322,7 @@ class ControlsInformation(BaseModel):
         """
         Clears statistics buffers.
 
-        :param name: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
+        :param name: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
         :type name: Union[str, List[str], None]
         """
         self.pv_record_map.clear_buffer(name)
@@ -331,7 +331,7 @@ class ControlsInformation(BaseModel):
         """
         Sets the size of the statistics buffers.
 
-        :param name: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
+        :param name: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
         :param size: Size of statistics buffer
         :type name: Union[str, List[str], None]
         :type size: int
@@ -340,18 +340,18 @@ class ControlsInformation(BaseModel):
 
     def start_buffering(self, name: Union[str, List[str], None]) -> None:
         """
-        Starts buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Starts buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param name: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
+        :param name: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
         :type name: Union[str, List[str], None]
         """
         self.pv_record_map.start_buffering(name)
 
     def stop_buffering(self, name: Union[str, List[str], None]) -> None:
         """
-        Stops buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Stops buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param name: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
+        :param name: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
         :type name: Union[str, List[str], None]
         """
         self.pv_record_map.stop_buffering(name)
@@ -416,15 +416,15 @@ class Hardware(BaseModel):
     connect_on_creation: ClassVar[bool]
     """Flag to connect automatically to PVs when created"""
     controls_information: SerializeAsAny[ControlsInformation]
-    """See :class:`~CATAP.common.machine.hardware.ControlsInformation`"""
+    """See :class:`~catapcore.common.machine.hardware.ControlsInformation`"""
     properties: SerializeAsAny[Properties]
-    """See :class:`~CATAP.common.machine.hardware.Properties`"""
+    """See :class:`~catapcore.common.machine.hardware.Properties`"""
     _aliases: ClassVar[Dict[str, str]]
     """Dictionary of alias names for this object"""
     _snapshot_settables: List[str]
-    """PVs to apply to the object when calling :func:`~CATAP.common.machine.hardware.Hardware.apply_snapshot`"""
+    """PVs to apply to the object when calling :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`"""
     _snapshot_gettables: List[str]
-    """PVs to read from the object when calling :func:`~CATAP.common.machine.hardware.Hardware.create_snapshot`"""
+    """PVs to read from the object when calling :func:`~catapcore.common.machine.hardware.Hardware.create_snapshot`"""
     _additional_snapshot_information: Dict[str, Any]
     """Additional properties to save in the snapshot"""
 
@@ -479,7 +479,7 @@ class Hardware(BaseModel):
         """
         Machine area for the object
 
-        :returns: :class:`~CATAP.common.constants.areas.MachineArea`
+        :returns: :class:`~catapcore.common.constants.areas.MachineArea`
         """
         return self.properties.machine_area
 
@@ -494,7 +494,7 @@ class Hardware(BaseModel):
     @property
     def statistics(self) -> Dict[str, StatisticalPV]:
         """
-        Returns all :class:`~CATAP.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
+        Returns all :class:`~catapcore.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
 
         :returns: Dict[str, StatisticalPV]
         """
@@ -504,7 +504,7 @@ class Hardware(BaseModel):
         self, names: Union[str, List[str], None] = None
     ) -> Union[StatisticalPV, Dict[str, StatisticalPV]]:
         """
-        Returns all :class:`~CATAP.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
+        Returns all :class:`~catapcore.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
 
         :param names: Names of PVs to check
         :type names: Union[str, List[str]]
@@ -526,9 +526,9 @@ class Hardware(BaseModel):
         """
         Check if the statistics buffer is full (i.e. if `len(PV.buffer) == PV.buffer_size)`.
 
-        See :attr:`~CATAP.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
+        See :attr:`~catapcore.common.machine.pv_utils.StatisticalPV.is_buffer_full`.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, check all.
         :type names: Union[str, List[str], None]
         :returns: True if buffer is full
         :rtype: bool | Dict[str, bool]
@@ -539,7 +539,7 @@ class Hardware(BaseModel):
         self, names: Union[str, List[str]] = None
     ) -> Union[bool, Dict[str, bool]]:
         """
-        Check if :class:`~CATAP.common.machine.pv_utils.StatisticalPV` objects is currently buffering
+        Check if :class:`~catapcore.common.machine.pv_utils.StatisticalPV` objects is currently buffering
 
         :param names: Names of PVs to check
         :type names: Union[str, List[str]]
@@ -566,7 +566,7 @@ class Hardware(BaseModel):
         """
         Sets the size of the statistics buffers.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, set all.
         :param size: Size of statistics buffer
         :type names: Union[str, List[str], None]
         :type size: int
@@ -577,9 +577,9 @@ class Hardware(BaseModel):
 
     def start_buffering(self, names: Union[str, List[str], None] = None) -> None:
         """
-        Starts buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Starts buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, start all.
         :type names: Union[str, List[str], None]
         """
         if not names:
@@ -588,9 +588,9 @@ class Hardware(BaseModel):
 
     def stop_buffering(self, names: Union[str, List[str], None] = None) -> None:
         """
-        Stops buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types.
+        Stops buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, stop all.
         :type names: Union[str, List[str], None]
         """
         if not names:
@@ -601,7 +601,7 @@ class Hardware(BaseModel):
         """
         Clears statistics buffers.
 
-        :param names: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
+        :param names: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types -- if `None`, clear all.
         :type names: Union[str, List[str], None]
         """
         if not names:
@@ -620,7 +620,7 @@ class Hardware(BaseModel):
         """
         Read the :attr:`~_snapshot_gettables` and save them to a dictionary.
 
-        If the gettable is a :class:`~CATAP.common.machine.pv_utils.StatisticalPV` and is buffering,
+        If the gettable is a :class:`~catapcore.common.machine.pv_utils.StatisticalPV` and is buffering,
         then save the buffer data as well
 
         :returns: Dict containing `value` (and `buffer`/`timestamp`) for all PVs in :attr:`~_snapshot_gettables`
