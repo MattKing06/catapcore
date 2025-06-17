@@ -630,7 +630,13 @@ class Hardware(BaseModel):
         for handle, pv in self.controls_information.pv_record_map.pvs.items():
             if handle in self._snapshot_gettables or handle in self._snapshot_settables:
                 if isinstance(pv, StatePV):
-                    snapshot[self.name].update({handle: {"value": pv.get().name}})
+                    value = pv.get()
+                    if value is None:
+                        snapshot[self.name].update({handle: {"value": value}})
+                    else:
+                        snapshot[self.name].update(
+                            {handle: {"value": pv.get(), "state": value.name}}
+                        )
                 else:
                     snapshot[self.name].update({handle: {"value": pv.get()}})
                 if self.is_buffering(handle):
