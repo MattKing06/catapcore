@@ -1,21 +1,21 @@
 """
-catapcore Snapshot Module
+CATAP Snapshot Module
 
 This module defines the base class for reading, writing and saving the state of a hardware object.
 
 Classes:
-    - :class:`~catapcore.common.constants.machine.snapshot.Snapshot`: Base class for\
+    - :class:`~CATAP.common.constants.machine.snapshot.Snapshot`: Base class for\
      generating, saving, and applying hardware settings on
-    :class:`~catapcore.common.machine.hardware.Hardware` objects.
+    :class:`~CATAP.common.machine.hardware.Hardware` objects.
 """
 
 from copy import deepcopy
 from os import path, makedirs
 from typing import Any, Dict, List, Union
 import warnings
-from catapcore.common.exceptions import InvalidSnapshotSetting
-from catapcore.common.machine.hardware import Hardware
-from catapcore.config import SNAPSHOT_LOCATION
+from CATAP.common.exceptions import InvalidSnapshotSetting
+from CATAP.common.machine.hardware import Hardware
+from CATAP.config import SNAPSHOT_LOCATION
 from ruamel.yaml import YAML
 from datetime import datetime
 from epics import ca
@@ -26,7 +26,7 @@ __all__ = ["Snapshot"]
 class Snapshot:
     """
     Base class for generating, saving, and applying, hardware settings on
-    :class:`~catapcore.common.machine.hardware.Hardware` objects
+    :class:`~CATAP.common.machine.hardware.Hardware` objects
     """
 
     _hardware_type: str
@@ -63,7 +63,7 @@ class Snapshot:
 
         :param hardware: Hardware object to update
         :param snapshot: Dictionary containing values for that object
-        :type hardware: :class:`~catapcore.common.machine.hardware.Hardware`
+        :type hardware: :class:`~CATAP.common.machine.hardware.Hardware`
         :type snapshot: Dictionary of values, keyed by `_hardware_type`
         """
         snapshot[self._hardware_type].update(hardware.create_snapshot())
@@ -272,7 +272,7 @@ class Snapshot:
     def load(self, filename: str = None) -> None:
         """
         Load a snapshot from a YAML file and write to memory as `self._snapshot`
-        (see :func:`~catapcore.common.machine.snapshot.Snapshot.set`)
+        (see :func:`~CATAP.common.machine.snapshot.Snapshot.set`)
 
         :param filename: Filename to read (cannot be `None`)
         :type filename: str
@@ -283,11 +283,11 @@ class Snapshot:
     def _apply(self, hardware: Hardware, snapshot: Dict[str, Any] = {}) -> None:
         """
         Apply snapshot to the specific Hardware object provided
-        (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
+        (see :func:`~CATAP.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param hardware: Hardware object to which the snapshot should be applied
         :param snapshot: Dictionary of values to apply
-        :type hardware: :class:`~catapcore.common.machine.hardware.Hardware`
+        :type hardware: :class:`~CATAP.common.machine.hardware.Hardware`
         :type snapshot: Dict
         """
         hardware.apply_snapshot(snapshot=snapshot)
@@ -295,7 +295,7 @@ class Snapshot:
     def apply(self, exclude: List[str] = []) -> None:
         """
         Apply snapshot to all Hardware objects provided in the snapshot
-        (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
+        (see :func:`~CATAP.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param exclude: Hardware object to which the snapshot should **not** be applied
         :type exclude: List[str]

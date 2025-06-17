@@ -1,19 +1,19 @@
 """
-catapcore Factory Module
+CATAP Factory Module
 
 This module defines a base class for grouping together multiple objects of the same hardware type.
 
 Classes:
-    - :class:`~catapcore.common.constants.machine.factory.Factory`: Base class for creating\
-    multiple :class:`~catapcore.common.machine.hardware.Hardware` objects.
+    - :class:`~CATAP.common.constants.machine.factory.Factory`: Base class for creating\
+    multiple :class:`~CATAP.common.machine.hardware.Hardware` objects.
 """
 
 import warnings
-from catapcore.common.machine.hardware import Hardware
-from catapcore.common.machine.area import MachineArea, _string_to_machine_area
-from catapcore.common.machine.pv_utils import StatisticalPV
-from catapcore.common.machine.snapshot import Snapshot
-from catapcore.common.exceptions import (
+from CATAP.common.machine.hardware import Hardware
+from CATAP.common.machine.area import MachineArea, _string_to_machine_area
+from CATAP.common.machine.pv_utils import StatisticalPV
+from CATAP.common.machine.snapshot import Snapshot
+from CATAP.common.exceptions import (
     InvalidHardwareSubtype,
     InvalidHardwareType,
     MachineAreaNotFound,
@@ -25,7 +25,7 @@ from ruamel.yaml import YAML
 from typing import Any, Dict, List, Tuple, Union, Callable, Type
 import os
 from pathlib import Path
-from catapcore.config import LATTICE_LOCATION, MACHINE_AREAS, _hardware_types
+from CATAP.config import LATTICE_LOCATION, MACHINE_AREAS, _hardware_types
 
 
 __all__ = ["Factory"]
@@ -33,7 +33,7 @@ __all__ = ["Factory"]
 
 class Factory:
     """
-    Base class for creating multiple  :class:`~catapcore.common.machine.hardware.Hardware` objects.
+    Base class for creating multiple  :class:`~CATAP.common.machine.hardware.Hardware` objects.
     """
 
     def __init__(
@@ -78,14 +78,14 @@ class Factory:
         areas: MachineArea | List[MachineArea] = None,
     ) -> Dict[str, Hardware]:
         """
-        Instantiate :class:`~catapcore.common.machine.hardware.Hardware` objects.
+        Instantiate :class:`~CATAP.common.machine.hardware.Hardware` objects.
 
-        :param T: Specific :class:`~catapcore.common.machine.hardware.Hardware` class type
-        :param areas: Select only objects in the :class:`~catapcore.common.machine.area.MachineArea` provided
+        :param T: Specific :class:`~CATAP.common.machine.hardware.Hardware` class type
+        :param areas: Select only objects in the :class:`~CATAP.common.machine.area.MachineArea` provided
         :type T: Type[Hardware]
         :type areas: Union[MachineArea, List[MachineArea], None]
 
-        :returns: Dictionary of :class:`~catapcore.common.machine.hardware.Hardware` objects
+        :returns: Dictionary of :class:`~CATAP.common.machine.hardware.Hardware` objects
         :rtype: Dict[str, Hardware]
         """
         try:
@@ -145,7 +145,7 @@ class Factory:
         """
         Check if hardware name exists in the Factory.
 
-        :param name: Name of :class:`~catapcore.common.machine.hardware.Hardware` object
+        :param name: Name of :class:`~CATAP.common.machine.hardware.Hardware` object
 
         :returns: True if name exists
         :rtype: Tuple[bool, Hardware]
@@ -164,13 +164,13 @@ class Factory:
         with_areas: bool = True,
     ) -> Dict[str, Hardware]:
         """Filter the hardware dictionary by machine area
-        (example areas can be found in :mod:`~catapcore.common.constants.areas`).
+        (example areas can be found in :mod:`~CATAP.common.constants.areas`).
         Using with_areas arg returns a dictionary with/without the areas
         as keys.
 
         :param area: Machine area
         :param with_areas: Returns a dictionary with the areas as keys if true
-        :type area: :class:`~catapcore.common.machine.area.MachineArea`
+        :type area: :class:`~CATAP.common.machine.area.MachineArea`
         :type with_areas: bool
 
         :returns: Dictionary of hardware by area
@@ -206,13 +206,13 @@ class Factory:
     ]:
         """
         Filter the hardware dictionary by machine area
-        (example areas can be found in :mod:`~catapcore.common.constants.areas`).
+        (example areas can be found in :mod:`~CATAP.common.constants.areas`).
         Using with_areas arg returns a dictionary with/without the areas
         as keys.
 
         :param machine_areas: Machine area
         :param with_areas: Returns a dictionary with the areas as keys if true
-        :type machine_areas: :class:`~catapcore.common.machine.area.MachineArea`
+        :type machine_areas: :class:`~CATAP.common.machine.area.MachineArea`
         :type with_areas: bool
 
         :returns: Dictionary of hardware by area
@@ -281,13 +281,13 @@ class Factory:
         with_subtypes: bool = True,
     ) -> Dict[str, Hardware]:
         """Filter the hardware dictionary by machine area
-        (example areas can be found in :mod:`~catapcore.common.constants.areas`).
+        (example areas can be found in :mod:`~CATAP.common.constants.areas`).
         Using with_areas arg returns a dictionary with/without the areas
         as keys.
 
         :param area: Machine area
         :param with_areas: Returns a dictionary with the areas as keys if true
-        :type area: :class:`~catapcore.common.machine.area.MachineArea`
+        :type area: :class:`~CATAP.common.machine.area.MachineArea`
         :type with_areas: bool
 
         :returns: Dictionary of hardware by area
@@ -327,13 +327,13 @@ class Factory:
     ]:
         """
         Filter the hardware dictionary by machine area
-        (example areas can be found in :mod:`~catapcore.common.constants.areas`).
+        (example areas can be found in :mod:`~CATAP.common.constants.areas`).
         Using with_areas arg returns a dictionary with/without the areas
         as keys.
 
         :param machine_areas: Machine area
         :param with_areas: Returns a dictionary with the areas as keys if true
-        :type machine_areas: :class:`~catapcore.common.machine.area.MachineArea`
+        :type machine_areas: :class:`~CATAP.common.machine.area.MachineArea`
         :type with_areas: bool
 
         :returns: Dictionary of hardware by area
@@ -406,12 +406,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ) -> Union[StatisticalPV, Dict[str, StatisticalPV]]:
         """
-        Returns all :class:`~catapcore.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested
+        Returns all :class:`~CATAP.common.machine.pv_utils.StatisticalPV` objects defined in the :class:`~PVMap`
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` objects required (get all if `None`)
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` objects required (get all if `None`)
         :type names: Union[List[str], str, Hardware, List[Hardware]]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (get all if `None`)
         :type stats: Union[List[str], str, None]
 
@@ -430,12 +430,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ) -> Union[bool, Dict[str, bool], Dict[str, Dict[str, bool]]]:
         """
-        Check if :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types is buffering
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Check if :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types is buffering
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, start all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, start all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (start all if `None`)
         :type stats: Union[List[str], str, None]
         :returns: True if the parameter is buffering
@@ -455,12 +455,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ):
         """
-        Starts buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Starts buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, start all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, start all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (start all if `None`)
         :type stats: Union[List[str], str, None]
         """
@@ -476,12 +476,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ):
         """
-        Stops buffering :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Stops buffering :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, stop all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, stop all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (stop all if `None`)
         :type stats: Union[List[str], str, None]
         """
@@ -497,12 +497,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ):
         """
-        Clear buffers :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Clear buffers :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, clear all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, clear all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (clear all if `None`)
         :type stats: Union[List[str], str, None]
         """
@@ -518,12 +518,12 @@ class Factory:
         stats: Union[List[str], str, None] = None,
     ) -> Union[bool, Dict[str, bool], Dict[str, Dict[str, bool]]]:
         """
-        Check if :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types are buffering
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Check if :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types are buffering
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, check all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, check all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (check all if `None`)
         :type stats: Union[List[str], str, None]
 
@@ -543,12 +543,12 @@ class Factory:
         val: int = 10,
     ):
         """
-        Set buffer size of :class:`~catapcore.common.machine.pv_utils.StatisticalPV` types
-        for the :class:`~catapcore.common.machine.hardware.Hardware` objects requested.
+        Set buffer size of :class:`~CATAP.common.machine.pv_utils.StatisticalPV` types
+        for the :class:`~CATAP.common.machine.hardware.Hardware` objects requested.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types -- if `None`, set all.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types -- if `None`, set all.
         :type names: Union[str, List[str], None]
-        :param stats: Names of :class:`~catapcore.common.machine.pv_utils.StatisticalPV`
+        :param stats: Names of :class:`~CATAP.common.machine.pv_utils.StatisticalPV`
         objects required (set all if `None`)
         :type stats: Union[List[str], str, None]
         :param val: Buffer size
@@ -564,9 +564,9 @@ class Factory:
         self, names: Union[List[str], str] = None
     ) -> Union[Dict[str, Hardware], Hardware]:
         """
-        Get :class:`~catapcore.common.machine.hardware.Hardware` object.
+        Get :class:`~CATAP.common.machine.hardware.Hardware` object.
 
-        :param names: Names of :class:`~catapcore.common.machine.hardware.Hardware` types.
+        :param names: Names of :class:`~CATAP.common.machine.hardware.Hardware` types.
         :type names: Union[List[str], str]
 
         :returns: Hardware objects (as Dict or individual object)
@@ -597,7 +597,7 @@ class Factory:
     @property
     def names(self) -> List[str]:
         """
-        Get names of all :class:`~catapcore.common.machine.hardware.Hardware` objects in the Factory.
+        Get names of all :class:`~CATAP.common.machine.hardware.Hardware` objects in the Factory.
 
         :returns: Names of objects
         :rtype: List[str]
@@ -610,7 +610,7 @@ class Factory:
         property_: Callable,
     ):
         """
-        Return a specific property for a :class:`~catapcore.common.machine.hardware.Hardware` object (get all if `None`).
+        Return a specific property for a :class:`~CATAP.common.machine.hardware.Hardware` object (get all if `None`).
 
         :param names: Name(s) of Hardware objects
         :type names: Union[str, List[str], None]
@@ -633,7 +633,7 @@ class Factory:
         setter_: Callable,
     ):
         """
-        Set a specific property for a :class:`~catapcore.common.machine.hardware.Hardware` object.
+        Set a specific property for a :class:`~CATAP.common.machine.hardware.Hardware` object.
 
         :param names: Name(s) of Hardware objects
         :type names: Union[str, List[str]]
@@ -672,7 +672,7 @@ class Factory:
         call_: Callable,
     ) -> None:
         """
-        Call a specific function in a :class:`~catapcore.common.machine.hardware.Hardware` class without any arguments.
+        Call a specific function in a :class:`~CATAP.common.machine.hardware.Hardware` class without any arguments.
 
         :param names: Name(s) of Hardware objects (call on all if `None`).
         :type names: Union[str, List[str], None]
@@ -696,7 +696,7 @@ class Factory:
         setter_: Callable,
     ) -> None:
         """
-        Set a specific property to multiple :class:`~catapcore.common.machine.hardware.Hardware` objects.
+        Set a specific property to multiple :class:`~CATAP.common.machine.hardware.Hardware` objects.
 
         :param settings: Name(s) of Hardware objects and value(s) to set.
         :type settings: Dict[str, Union[float, int]]
@@ -710,13 +710,13 @@ class Factory:
 
     def create_snapshot(self) -> None:
         """
-        Updates the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Updates the current values in the snapshot of the factory (see :class:`~CATAP.common.machine.snapshot.Snapshot`)
         """
         self._current_snapshot.update()
 
     def get_snapshot(self) -> Dict:
         """
-        Returns the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Returns the current values in the snapshot of the factory (see :class:`~CATAP.common.machine.snapshot.Snapshot`)
 
         :returns: Snapshot dict
         :rtype: Dict
@@ -725,7 +725,7 @@ class Factory:
 
     def set_snapshot(self, snapshot=Dict[str, Dict[str, Any]]):
         """
-        Sets the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Sets the current values in the snapshot of the factory (see :class:`~CATAP.common.machine.snapshot.Snapshot`)
 
         :param snapshot: Snapshot dict to set
         :type snapshot: Dict[str, Dict[str, Any]]
@@ -773,8 +773,8 @@ class Factory:
     def apply_snapshot(self, exclude: List[str] = []) -> None:
         """
         Applies the snapshot that is currently stored.
-        Use :func:`~catapcore.common.machine.factory.Factory.set_snapshot` or
-        :func:`~catapcore.common.machine.factory.Factory.load_snapshot` to change the current snapshot.
+        Use :func:`~CATAP.common.machine.factory.Factory.set_snapshot` or
+        :func:`~CATAP.common.machine.factory.Factory.load_snapshot` to change the current snapshot.
 
         :param exclude: Can be used to not apply the snapshot to supplied hardware names.
         :type exclude: List[str]

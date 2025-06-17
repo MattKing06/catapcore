@@ -1,25 +1,25 @@
 """
-catapcore PV Utils Module
+CATAP PV Utils Module
 
 This module defines the base class for interacting with the controls system and EPICS PVs.
 
 Classes:
-    - :class:`~catapcore.common.constants.machine.pv_utils.PVSignal`: Base class for interacting with EPICS PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.StringPV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for string-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.ScalarPV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for scalar-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.StatePV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for enum-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.BinaryPV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for binary-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.WaveformPV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for waveform-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.StatisticalPV`: Sub-class of\
-    :class:`~catapcore.common.constants.machine.pv_utils.PVSignal` class for statistical-type PVs.
-    - :class:`~catapcore.common.constants.machine.pv_utils.PVInfo`: Base class for\
+    - :class:`~CATAP.common.constants.machine.pv_utils.PVSignal`: Base class for interacting with EPICS PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.StringPV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for string-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.ScalarPV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for scalar-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.StatePV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for enum-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.BinaryPV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for binary-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.WaveformPV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for waveform-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.StatisticalPV`: Sub-class of\
+    :class:`~CATAP.common.constants.machine.pv_utils.PVSignal` class for statistical-type PVs.
+    - :class:`~CATAP.common.constants.machine.pv_utils.PVInfo`: Base class for\
     defining attributes associated with a PV.
-    - :class:`~catapcore.common.constants.machine.pv_utils.StateMap`: Enum for\
+    - :class:`~CATAP.common.constants.machine.pv_utils.StateMap`: Enum for\
     mapping states to integers.
 """
 
@@ -63,9 +63,9 @@ from pydantic import (
     model_validator,
 )
 
-from catapcore.common.exceptions import FailedEPICSOperationWarning, UnexpectedPVEntry
-from catapcore.common.machine.protocol import CA, PVA, Protocol
-from catapcore.config import EPICS_TIMEOUT
+from CATAP.common.exceptions import FailedEPICSOperationWarning, UnexpectedPVEntry
+from CATAP.common.machine.protocol import CA, PVA, Protocol
+from CATAP.config import EPICS_TIMEOUT
 
 
 __all__ = [
@@ -105,8 +105,8 @@ class PVSignal(BaseModel):
     name: str
     """PV name"""
     protocol: str = "CA"
-    """:class:`~catapcore.common.machine.protocol.Protocol` to use for the PV
-     (:class:`~catapcore.common.machine.protocol.CA` or :class:`~catapcore.common.machine.protocol.PVA`),
+    """:class:`~CATAP.common.machine.protocol.Protocol` to use for the PV
+     (:class:`~CATAP.common.machine.protocol.CA` or :class:`~CATAP.common.machine.protocol.PVA`),
      Channel Access is selected by default
     """
     description: str | None = ""
@@ -114,7 +114,7 @@ class PVSignal(BaseModel):
     read_only: bool = True
     """Flag to define whether a PV has write-access"""
     _pv: Protocol = PrivateAttr(default=None)
-    """:class:`~catapcore.common.machine.protocol.Protocol` for getting, setting, and monitoring from the control system"""
+    """:class:`~CATAP.common.machine.protocol.Protocol` for getting, setting, and monitoring from the control system"""
     _value: Any
     """Value of the PV"""
     _timestamp: datetime
@@ -293,7 +293,7 @@ class PVSignal(BaseModel):
 
 class StringPV(PVSignal):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for string-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for string-type PVs
     """
 
     _value: str
@@ -336,7 +336,7 @@ class StringPV(PVSignal):
 
     def get(self) -> str:
         """
-        Get the current value of a PV (see :func:`~catapcore.common.machine.pv_utils.PVSignal.get`)
+        Get the current value of a PV (see :func:`~CATAP.common.machine.pv_utils.PVSignal.get`)
 
         :returns: Current value of the PV
         :rtype: str
@@ -350,7 +350,7 @@ class StringPV(PVSignal):
 
 class ScalarPV(PVSignal):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for scalar-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for scalar-type PVs
     """
 
     units: str = "arb. units"
@@ -396,7 +396,7 @@ class ScalarPV(PVSignal):
 
     def get(self) -> float | int:
         """
-        Get the current value of a PV (see :func:`~catapcore.common.machine.pv_utils.PVSignal.get`)
+        Get the current value of a PV (see :func:`~CATAP.common.machine.pv_utils.PVSignal.get`)
 
         :returns: Current value of the PV
         :rtype: Union[float, int]
@@ -406,7 +406,7 @@ class ScalarPV(PVSignal):
 
 class StatePV(PVSignal):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for enum-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for enum-type PVs
     """
 
     _value: int
@@ -464,7 +464,7 @@ class StatePV(PVSignal):
 
     def get(self) -> Enum | None:
         """
-        Get the current value of a PV (see :func:`~catapcore.common.machine.pv_utils.PVSignal.get`).
+        Get the current value of a PV (see :func:`~CATAP.common.machine.pv_utils.PVSignal.get`).
         The enum returned is based on the map provided to the config file.
         Will raise a warning if this map is not provided
 
@@ -491,7 +491,7 @@ class StatePV(PVSignal):
 
 class BinaryPV(PVSignal):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for binary-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for binary-type PVs
     """
 
     _value: bool | Literal[0, 1]
@@ -530,7 +530,7 @@ class BinaryPV(PVSignal):
 
     def get(self) -> bool | int:
         """
-        Get the current value of a PV (see :func:`~catapcore.common.machine.pv_utils.PVSignal.get`)
+        Get the current value of a PV (see :func:`~CATAP.common.machine.pv_utils.PVSignal.get`)
 
         :returns: Current value of the PV
         :rtype: Union[bool, int]
@@ -548,7 +548,7 @@ class BinaryPV(PVSignal):
 
 class WaveformPV(PVSignal):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for waveform-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for waveform-type PVs
     """
 
     _value: np.ndarray
@@ -574,7 +574,7 @@ class WaveformPV(PVSignal):
 
     def get(self, count: int = 1, as_numpy: bool = True) -> np.ndarray:
         """
-        Get the current value of a PV (see :func:`~catapcore.common.machine.pv_utils.PVSignal.get`)
+        Get the current value of a PV (see :func:`~CATAP.common.machine.pv_utils.PVSignal.get`)
 
         :param count: Length of the PV
         :param as_numpy: Convert return value to numpy array
@@ -609,7 +609,7 @@ class WaveformPV(PVSignal):
 
 class StatisticalPV(ScalarPV):
     """
-    Sub-class of :class:`~catapcore.common.machine.pv_utils.PVSignal` class for statistical-type PVs
+    Sub-class of :class:`~CATAP.common.machine.pv_utils.PVSignal` class for statistical-type PVs
     """
 
     model_config = ConfigDict(
@@ -843,7 +843,7 @@ class PVInfo(BaseModel):
     type: Type[
         ScalarPV | BinaryPV | StatePV | StringPV | WaveformPV | StatisticalPV
     ] = StatisticalPV
-    """Type of PV (see :mod:`~catapcore.common.machine.pv_utils`)"""
+    """Type of PV (see :mod:`~CATAP.common.machine.pv_utils`)"""
     protocol: Literal["CA", "PVA"] = "CA"
     """Chosen Protocol for the PV (ChannelAccess or PVAccess)"""
     auto_buffer: bool | None = None
@@ -851,7 +851,7 @@ class PVInfo(BaseModel):
     buffer_size: PositiveInt | None = 10
     """Size of statistics buffer"""
     states: Dict | None = None
-    """State map of states to integers for :class:`~catapcore.common.machine.pv_utils.StatePV` types"""
+    """State map of states to integers for :class:`~CATAP.common.machine.pv_utils.StatePV` types"""
     read_only: bool = True
     """Flag to enable write access to PVs"""
     _type_definitions: ClassVar[Dict[str, Type]] = {
@@ -862,7 +862,7 @@ class PVInfo(BaseModel):
         "statistical": StatisticalPV,
         "string": StringPV,
     }
-    """Possible PV types (see :mod:`~catapcore.common.machine.pv_utils`"""
+    """Possible PV types (see :mod:`~CATAP.common.machine.pv_utils`"""
 
     @field_validator("type", mode="before")
     def validate_pv_type(cls, v: str) -> Type:
@@ -878,15 +878,15 @@ class PVInfo(BaseModel):
         self,
     ) -> ScalarPV | BinaryPV | StatePV | StringPV | WaveformPV | StatisticalPV:
         """
-        Create specific instance of a PV based on `type` (see :mod:`~catapcore.common.machine.pv_utils`)
+        Create specific instance of a PV based on `type` (see :mod:`~CATAP.common.machine.pv_utils`)
 
         :return: Instance of PV object
-        :rtype: Union[:class:`~catapcore.common.machine.pv_utils.ScalarPV`,
-        :class:`~catapcore.common.machine.pv_utils.BinaryPV`,
-        :class:`~catapcore.common.machine.pv_utils.StatePV`,
-        :class:`~catapcore.common.machine.pv_utils.WaveformPV`,
-        :class:`~catapcore.common.machine.pv_utils.StatisticalPV`,
-        :class:`~catapcore.common.machine.pv_utils.StringPV`]
+        :rtype: Union[:class:`~CATAP.common.machine.pv_utils.ScalarPV`,
+        :class:`~CATAP.common.machine.pv_utils.BinaryPV`,
+        :class:`~CATAP.common.machine.pv_utils.StatePV`,
+        :class:`~CATAP.common.machine.pv_utils.WaveformPV`,
+        :class:`~CATAP.common.machine.pv_utils.StatisticalPV`,
+        :class:`~CATAP.common.machine.pv_utils.StringPV`]
         """
         if self.type == ScalarPV:
             return ScalarPV(
