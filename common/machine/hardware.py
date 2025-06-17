@@ -632,7 +632,7 @@ class Hardware(BaseModel):
                 if isinstance(pv, StatePV):
                     value = pv.get()
                     if value is None:
-                        snapshot[self.name].update({handle: {"value": value}})
+                        snapshot[self.name].update({handle: {"state": None}})
                     else:
                         snapshot[self.name].update(
                             {handle: {"value": pv.get(), "state": value.name}}
