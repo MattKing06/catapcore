@@ -858,6 +858,8 @@ class PVInfo(BaseModel):
     """State map of states to integers for :class:`~catapcore.common.machine.pv_utils.StatePV` types"""
     read_only: bool = True
     """Flag to enable write access to PVs"""
+    units: str = "arb. units"
+    """ Units for the PV """
     _type_definitions: ClassVar[Dict[str, Type]] = {
         "scalar": ScalarPV,
         "binary": BinaryPV,
@@ -898,6 +900,7 @@ class PVInfo(BaseModel):
                 description=self.description,
                 read_only=self.read_only,
                 protocol=self.protocol,
+                units=self.units,
             )
         if self.type == BinaryPV:
             return BinaryPV(
@@ -920,6 +923,7 @@ class PVInfo(BaseModel):
                 description=self.description,
                 read_only=self.read_only,
                 protocol=self.protocol,
+                units=self.units,
             )
         if self.type == StatisticalPV:
             return StatisticalPV(
@@ -929,6 +933,7 @@ class PVInfo(BaseModel):
                 buffer_size=self.buffer_size,
                 read_only=self.read_only,
                 protocol=self.protocol,
+                units=self.units,
             )
         if self.type == StringPV:
             return StringPV(
