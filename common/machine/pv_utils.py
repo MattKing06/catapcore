@@ -436,7 +436,7 @@ class StatePV(PVSignal):
 
     def put(
         self,
-        value: int | str,
+        value: int | str | Enum,
     ) -> None:
         """
         Set the value of a PV. Will raise a warning if `read_only` is True or if the state map is invalid.
@@ -445,7 +445,11 @@ class StatePV(PVSignal):
         :type value: Union[str, int]
         """
         try:
-            if isinstance(value, bool):
+            if isinstance(value, Enum):
+                if value not in self.states:
+                    raise ValueError
+                super().put(value)
+            elif isinstance(value, bool):
                 raise ValueError
             elif isinstance(value, str):
                 set_state: Enum = self.states[value]
