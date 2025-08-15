@@ -842,6 +842,8 @@ class PVInfo(BaseModel):
 
     pv: str
     """Full name of PV"""
+    virtual_pv: str | None = None
+    """Virtual PV name, if applicable"""
     description: str | None = None
     """Description of PV"""
     type: Type[

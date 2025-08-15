@@ -19,7 +19,7 @@ from pydantic import (
     SerializeAsAny,
     field_validator,
 )
-from catapcore.config import MACHINE_AREAS
+from catapcore.config import MACHINE_AREAS, VIRTUAL_PREFIX
 from typing import Any, ClassVar, Dict, List, Union, Type, Callable
 from catapcore.common.machine.pv_utils import (
     BinaryPV,
@@ -120,7 +120,12 @@ class PVMap(BaseModel):
     ) -> ScalarPV | BinaryPV | StatePV | StringPV | WaveformPV | StatisticalPV:
         pv_info = PVInfo(**v)
         if cls.is_virtual:
-            pv_info.pv = "VM-" + pv_info.pv
+            if pv_info.virtual_pv:
+                pv_info.pv = pv_info.virtual_pv
+            else:
+                # If the PV does not have specific virtual_pv in the config
+                # we will just preprend the virtual prefix to the pv name
+                pv_info.pv = VIRTUAL_PREFIX + pv_info.pv
             pv_info.read_only = False
         return pv_info.create()
 
@@ -634,15 +639,17 @@ class Hardware(BaseModel):
                     if value is None:
                         snapshot[self.name].update({handle: {"value": None}})
                     else:
-                        snapshot[self.name].update(
-                            {handle: {"value": value.name}}
-                        )
+                        snapshot[self.name].update({handle: {"value": value.name}})
                 else:
                     snapshot[self.name].update({handle: {"value": pv.get()}})
                 if self.is_buffering(handle):
                     stats = self.get_statistics(handle)
-                    stats_buffer = array(stats.buffer)[::, 1] if stats.buffer else array([])
-                    timestamps = array(stats.buffer)[::, 0] if stats.buffer else array([])
+                    stats_buffer = (
+                        array(stats.buffer)[::, 1] if stats.buffer else array([])
+                    )
+                    timestamps = (
+                        array(stats.buffer)[::, 0] if stats.buffer else array([])
+                    )
                     snapshot[self.name][handle].update(
                         {
                             "buffer": stats_buffer.tolist(),
