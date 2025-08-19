@@ -15,7 +15,7 @@ from typing import Any, Dict, List, Union
 import warnings
 from catapcore.common.exceptions import InvalidSnapshotSetting
 from catapcore.common.machine.hardware import Hardware
-from catapcore.config import SNAPSHOT_LOCATION
+import catapcore.config as cfg
 from ruamel.yaml import YAML
 from datetime import datetime
 from epics import ca
@@ -48,7 +48,7 @@ class Snapshot:
         self._hardware = hardware
         self._hardware_type = hardware_type
         self._default_snapshot_location = path.join(
-            SNAPSHOT_LOCATION,
+            cfg.SNAPSHOT_LOCATION,
             self._hardware_type,
         )
         if not path.exists(self._default_snapshot_location):

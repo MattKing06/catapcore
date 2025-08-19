@@ -114,7 +114,10 @@ class PVSignal(BaseModel):
     read_only: bool = True
     """Flag to define whether a PV has write-access"""
     _pv: Protocol = PrivateAttr(default=None)
-    """:class:`~catapcore.common.machine.protocol.Protocol` for getting, setting, and monitoring from the control system"""
+    """
+    :class:`~catapcore.common.machine.protocol.Protocol`
+    for getting, setting, and monitoring from the control system
+    """
     _value: Any
     """Value of the PV"""
     _timestamp: datetime
@@ -842,6 +845,8 @@ class PVInfo(BaseModel):
 
     pv: str
     """Full name of PV"""
+    virtual_pv: str | None = None
+    """Virtual PV name, if applicable"""
     description: str | None = None
     """Description of PV"""
     type: Type[

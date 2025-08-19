@@ -55,3 +55,5 @@ Example usage:
     print(TYPES.MAGNET.QUADRUPOLE)
     print(TYPES.CAVITY.LINAC)
 """
+
+VIRTUAL_PREFIX = "VM-"

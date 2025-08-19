@@ -19,7 +19,7 @@ from pydantic import (
     SerializeAsAny,
     field_validator,
 )
-from catapcore.config import MACHINE_AREAS
+import catapcore.config as cfg
 from typing import Any, ClassVar, Dict, List, Union, Type, Callable
 from catapcore.common.machine.pv_utils import (
     BinaryPV,
@@ -120,7 +120,12 @@ class PVMap(BaseModel):
     ) -> ScalarPV | BinaryPV | StatePV | StringPV | WaveformPV | StatisticalPV:
         pv_info = PVInfo(**v)
         if cls.is_virtual:
-            pv_info.pv = "VM-" + pv_info.pv
+            if pv_info.virtual_pv:
+                pv_info.pv = pv_info.virtual_pv
+            else:
+                # If the PV does not have specific virtual_pv in the config
+                # we will just preprend the virtual prefix to the pv name
+                pv_info.pv = cfg.VIRTUAL_PREFIX + pv_info.pv
             pv_info.read_only = False
         return pv_info.create()
 
@@ -392,12 +397,12 @@ class Properties(BaseModel):
     @field_validator("machine_area", mode="before")
     def create_machine_area(cls, v: str) -> MachineArea:
         area = MachineArea(name=v.upper())
-        if area in MACHINE_AREAS:
+        if area in cfg.MACHINE_AREAS:
             return area
         else:
             raise ValueError(
                 f"Could not find machine_area {area} in Machine Areas:"
-                + f"{','.join([_area.name for _area in MACHINE_AREAS])}",
+                + f"{','.join([_area.name for _area in cfg.MACHINE_AREAS])}",
             )
 
     @field_validator("name_alias", mode="before")
@@ -634,15 +639,17 @@ class Hardware(BaseModel):
                     if value is None:
                         snapshot[self.name].update({handle: {"value": None}})
                     else:
-                        snapshot[self.name].update(
-                            {handle: {"value": value.name}}
-                        )
+                        snapshot[self.name].update({handle: {"value": value.name}})
                 else:
                     snapshot[self.name].update({handle: {"value": pv.get()}})
                 if self.is_buffering(handle):
                     stats = self.get_statistics(handle)
-                    stats_buffer = array(stats.buffer)[::, 1] if stats.buffer else array([])
-                    timestamps = array(stats.buffer)[::, 0] if stats.buffer else array([])
+                    stats_buffer = (
+                        array(stats.buffer)[::, 1] if stats.buffer else array([])
+                    )
+                    timestamps = (
+                        array(stats.buffer)[::, 0] if stats.buffer else array([])
+                    )
                     snapshot[self.name][handle].update(
                         {
                             "buffer": stats_buffer.tolist(),
@@ -679,16 +686,16 @@ class Hardware(BaseModel):
         return (self.name == other.name) and (self.position == other.position)
 
     def __lt__(self, other):
-        this_machine_area_index = MACHINE_AREAS.index(self.machine_area)
-        other_machine_area_index = MACHINE_AREAS.index(other.machine_area)
+        this_machine_area_index = cfg.MACHINE_AREAS.index(self.machine_area)
+        other_machine_area_index = cfg.MACHINE_AREAS.index(other.machine_area)
         return (this_machine_area_index, self.position) < (
             other_machine_area_index,
             other.position,
         )
 
     def __gt__(self, other):
-        this_machine_area_index = MACHINE_AREAS.index(self.machine_area)
-        other_machine_area_index = MACHINE_AREAS.index(other.machine_area)
+        this_machine_area_index = cfg.MACHINE_AREAS.index(self.machine_area)
+        other_machine_area_index = cfg.MACHINE_AREAS.index(other.machine_area)
         return (this_machine_area_index, self.position) > (
             other_machine_area_index,
             other.position,

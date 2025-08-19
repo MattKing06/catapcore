@@ -144,7 +144,8 @@ class HighLevelSystemComponents(BaseModel):
         component: Hardware,
     ) -> None:
         """
-        Apply snapshot to a sub-component of the :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
+        Apply snapshot to a sub-component of the
+        :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
         (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param snapshot: Snapshot dictionary to apply
@@ -169,7 +170,8 @@ class HighLevelSystemComponents(BaseModel):
         self, snapshot: Dict[str, Dict[str, Any]], apply_to: List[str] = None
     ):
         """
-        Apply snapshot to the entire :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
+        Apply snapshot to the entire
+        :class:`~catapcore.common.machine.high_level_system.HighLevelSystem` object
         (see :func:`~catapcore.common.machine.hardware.Hardware.apply_snapshot`)
 
         :param snapshot: Snapshot dictionary to apply
@@ -218,7 +220,8 @@ class HighLevelSystemComponents(BaseModel):
 
 class HighLevelSystem(BaseModel):
     """
-    Base class for grouping together multiple sub-components (:class:`~catapcore.common.machine.hardware.Hardware` objects).
+    Base class for grouping together multiple sub-components
+    (:class:`~catapcore.common.machine.hardware.Hardware` objects).
     """
 
     is_virtual: ClassVar[bool]
