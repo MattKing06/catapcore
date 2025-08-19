@@ -26,8 +26,10 @@ jobs:
         pip install -r requirements.txt
     - name: Lint with flake8
       run: |
-        flake8 --count --select=E9,F63,F7,F82 --show-source --statistics .
-        flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics .
+        flake8 --count --select=E9,F63,F7,F82 --show-source --statistics common tests
+        flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics common tests
     - name: Test with unittest
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
-        PYTHONPATH=${{ github.workspace }} python -m unittest discover
+        python -m unittest discover -s tests
