@@ -13,11 +13,8 @@ jobs:
     strategy:
       matrix:
         python-version: [ "3.10", "3.11", "3.12" ]
-
     steps:
     - uses: actions/checkout@v4
-    - name: Change to repo root
-      run: cd ${{ github.workspace }}
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
