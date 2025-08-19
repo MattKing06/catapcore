@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch
-import catapcore.config as cfg
+import config as cfg
 import os
-from catapcore.common.machine.hardware import Hardware
-from catapcore.common.machine.snapshot import Snapshot
+from common.machine.hardware import Hardware
+from common.machine.snapshot import Snapshot
 
 cfg.SNAPSHOT_LOCATION = "./catapcore/tests/snapshots"
 
@@ -23,7 +23,7 @@ class TestSnapshot(unittest.TestCase):
         return super().tearDown()
 
     @patch(
-        "catapcore.common.machine.hardware.Hardware",
+        "common.machine.hardware.Hardware",
         new_callable=MagicMock(spec=Hardware),
     )
     def test_snapshot_initialisation(self, mock_hardware: Hardware):
@@ -41,10 +41,10 @@ class TestSnapshot(unittest.TestCase):
         self.assertTrue(os.path.exists(self.expected_output_path))
 
     @patch(
-        "catapcore.common.machine.hardware.Hardware.create_snapshot", new_callable=Mock
+        "common.machine.hardware.Hardware.create_snapshot", new_callable=Mock
     )
     @patch(
-        "catapcore.common.machine.hardware.Hardware",
+        "common.machine.hardware.Hardware",
         new_callable=MagicMock(spec=Hardware),
     )
     def test_update_changes_snapshot_dictionary(

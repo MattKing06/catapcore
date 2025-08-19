@@ -8,8 +8,8 @@ from p4p.nt.enum import ntenum
 from p4p.nt.ndarray import ntndarray
 from p4p.nt.scalar import ntbool, ntfloat, ntint, ntnumericarray, ntstr, ntstringarray
 
-from catapcore.common.exceptions import FailedEPICSOperationWarning
-from catapcore.common.machine.protocol import PVA
+from common.exceptions import FailedEPICSOperationWarning
+from common.machine.protocol import PVA
 
 
 def make_example_enum(index=0, choices=["False", "True"]) -> ntenum:

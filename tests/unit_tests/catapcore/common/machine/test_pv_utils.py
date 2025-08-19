@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
 
-from catapcore.common.exceptions import FailedEPICSOperationWarning
-from catapcore.common.machine.protocol import CA, PVA
-from catapcore.common.machine.pv_utils import (
+from common.exceptions import FailedEPICSOperationWarning
+from common.machine.protocol import CA, PVA
+from common.machine.pv_utils import (
     BinaryPV,
     PVSignal,
     ScalarPV,
