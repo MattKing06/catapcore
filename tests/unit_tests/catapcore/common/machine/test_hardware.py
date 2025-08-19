@@ -1,10 +1,10 @@
 import os
 import unittest
 from ruamel.yaml import YAML
-from common.machine.hardware import Hardware
-from common.machine.area import MachineArea
-from common.exceptions import UnexpectedPVEntry
-import config as cfg
+from catapcore.common.machine.hardware import Hardware
+from catapcore.common.machine.area import MachineArea
+from catapcore.common.exceptions import UnexpectedPVEntry
+import catapcore.config as cfg
 
 cfg.LATTICE_LOCATION = "./catapcore/tests/lattice"
 

@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from common.machine.area import MachineArea
+from catapcore.common.machine.area import MachineArea
 import unittest
 
 

@@ -1,7 +1,7 @@
-from common.machine.factory import Factory
-from common.machine.hardware import Hardware
-from common.machine.area import MachineArea
-from common.exceptions import (
+from catapcore.common.machine.factory import Factory
+from catapcore.common.machine.hardware import Hardware
+from catapcore.common.machine.area import MachineArea
+from catapcore.common.exceptions import (
     InvalidHardwareType,
     MachineAreaNotFound,
     MachineAreaNotProvided,
@@ -9,7 +9,7 @@ from common.exceptions import (
     HardwareNameNotProvided,
 )
 import unittest
-import config as cfg
+import catapcore.config as cfg
 
 cfg.LATTICE_LOCATION = "./catapcore/tests/lattice"
 
