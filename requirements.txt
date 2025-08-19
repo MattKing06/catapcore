@@ -1,5 +1,0 @@
-pydantic[all]
-ruamel.yaml
-pyepics
-numpy
-p4p
