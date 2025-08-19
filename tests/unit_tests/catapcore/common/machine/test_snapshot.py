@@ -1,16 +1,18 @@
 import unittest
 from unittest.mock import MagicMock, Mock, patch
-from catapcore.config import SNAPSHOT_LOCATION
+import catapcore.config as cfg
 import os
 from catapcore.common.machine.hardware import Hardware
 from catapcore.common.machine.snapshot import Snapshot
+
+cfg.SNAPSHOT_LOCATION = "./catapcore/tests/snapshots"
 
 
 class TestSnapshot(unittest.TestCase):
     def setUp(self):
         self.hardware_type = "Hardware"
         self.expected_output_path = os.path.join(
-            SNAPSHOT_LOCATION,
+            cfg.SNAPSHOT_LOCATION,
             self.hardware_type,
         )
         return super().setUp()
@@ -21,7 +23,8 @@ class TestSnapshot(unittest.TestCase):
         return super().tearDown()
 
     @patch(
-        "CATAP.common.machine.hardware.Hardware", new_callable=MagicMock(spec=Hardware)
+        "catapcore.common.machine.hardware.Hardware",
+        new_callable=MagicMock(spec=Hardware),
     )
     def test_snapshot_initialisation(self, mock_hardware: Hardware):
         self.mock_snapshot_hardware = {"test-hardware": mock_hardware}
@@ -37,9 +40,12 @@ class TestSnapshot(unittest.TestCase):
         )
         self.assertTrue(os.path.exists(self.expected_output_path))
 
-    @patch("CATAP.common.machine.hardware.Hardware.create_snapshot", new_callable=Mock)
     @patch(
-        "CATAP.common.machine.hardware.Hardware", new_callable=MagicMock(spec=Hardware)
+        "catapcore.common.machine.hardware.Hardware.create_snapshot", new_callable=Mock
+    )
+    @patch(
+        "catapcore.common.machine.hardware.Hardware",
+        new_callable=MagicMock(spec=Hardware),
     )
     def test_update_changes_snapshot_dictionary(
         self, mock_hardware: MagicMock, mock_create_snapshot: Mock
