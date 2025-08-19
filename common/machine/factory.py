@@ -25,7 +25,7 @@ from ruamel.yaml import YAML
 from typing import Any, Dict, List, Tuple, Union, Callable, Type
 import os
 from pathlib import Path
-from catapcore.config import LATTICE_LOCATION, MACHINE_AREAS, _hardware_types
+import catapcore.config as cfg
 
 
 __all__ = ["Factory"]
@@ -70,7 +70,7 @@ class Factory:
         :returns: Config folder path
         :rtype: str
         """
-        return f"{LATTICE_LOCATION}/{self.lattice_folder}"
+        return f"{cfg.LATTICE_LOCATION}/{self.lattice_folder}"
 
     def create_hardware(
         self,
@@ -98,7 +98,7 @@ class Factory:
         hardware_mappings = {}
         if areas is None:
             # no specific machine areas applied, load everything.
-            areas = MACHINE_AREAS
+            areas = cfg.MACHINE_AREAS
         if isinstance(areas, str) or isinstance(areas, MachineArea):
             areas = [areas]
         yaml = YAML(typ="safe")
@@ -233,7 +233,7 @@ class Factory:
                 "Please provide a MachineArea or list of MachineAreas to filter by."
             )
         elif isinstance(machine_areas, MachineArea):
-            if machine_areas not in MACHINE_AREAS:
+            if machine_areas not in cfg.MACHINE_AREAS:
                 raise MachineAreaNotFound(
                     f"Could not find machine area: {machine_areas.name}"
                 )
@@ -245,7 +245,7 @@ class Factory:
             # convert arg into MachineArea format
             _areas_to_check = [_string_to_machine_area(area) for area in machine_areas]
             component_by_machine_area = {}
-            for area in MACHINE_AREAS:
+            for area in cfg.MACHINE_AREAS:
                 if area in _areas_to_check:
                     component_by_machine_area.update(
                         self._get_by_area(
@@ -259,7 +259,7 @@ class Factory:
                     area: {**hardware}
                     for area, hardware in sorted(
                         component_by_machine_area.items(),
-                        key=lambda x: MACHINE_AREAS.index(
+                        key=lambda x: cfg.MACHINE_AREAS.index(
                             _string_to_machine_area(x[0])
                         ),
                     )
@@ -340,7 +340,7 @@ class Factory:
         :rtype: Dict[str, Hardware]
         """
         try:
-            valid_subtypes = _hardware_types[self._hardware_type.__name__.upper()]
+            valid_subtypes = cfg._hardware_types[self._hardware_type.__name__.upper()]
         except KeyError:
             warnings.warn(
                 message=f"Could not find any subtypes for {self._hardware_type.__name__.upper()}",
@@ -610,7 +610,8 @@ class Factory:
         property_: Callable,
     ):
         """
-        Return a specific property for a :class:`~catapcore.common.machine.hardware.Hardware` object (get all if `None`).
+        Return a specific property for a :class:`~catapcore.common.machine.hardware.Hardware` object.
+        If `names` is `None`, return a dictionary of all hardware names and their property values.
 
         :param names: Name(s) of Hardware objects
         :type names: Union[str, List[str], None]
@@ -710,13 +711,15 @@ class Factory:
 
     def create_snapshot(self) -> None:
         """
-        Updates the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Updates the current values in the snapshot of the factory
+        (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
         """
         self._current_snapshot.update()
 
     def get_snapshot(self) -> Dict:
         """
-        Returns the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Returns the current values in the snapshot of the factory
+        (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
 
         :returns: Snapshot dict
         :rtype: Dict
@@ -725,7 +728,8 @@ class Factory:
 
     def set_snapshot(self, snapshot=Dict[str, Dict[str, Any]]):
         """
-        Sets the current values in the snapshot of the factory (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
+        Sets the current values in the snapshot of the factory
+        (see :class:`~catapcore.common.machine.snapshot.Snapshot`)
 
         :param snapshot: Snapshot dict to set
         :type snapshot: Dict[str, Dict[str, Any]]

@@ -1,0 +1,43 @@
+controls_information:
+  pv_record_map:
+    X:
+      type: statistical
+      auto_buffer: True
+      buffer_size: 100
+      units: mm
+      description: "X position reading"
+      pv: "BPM-02:X_RBV"
+    Y:
+      type: statistical
+      auto_buffer: True
+      buffer_size: 100
+      units: mm
+      description: "X position reading"
+      pv: "BPM-02:Y_READBACK"
+    ACQUIRE:
+      type: state
+      description: "Trigger acquisition of BPM data"
+      pv: "BPM-02:ACQUIRE"
+      read_only: False
+      states:
+        START: 1
+        STOP: 0
+    IS_ACQUIRING:
+      type: binary
+      description: "Indicates if BPM is currently acquiring data"
+      pv: "BPM-02:ACQUIRE_RBV"
+  x_calibration_factor: 0.02
+  y_calibration_factor: 0.0023
+properties:
+  name: BPM-02
+  hardware_type: BPM
+  subtype: Standard
+  position: 2.023
+  machine_area: BL02
+  name_alias: BL-02-BPM
+  manufacturer: ACME Instruments
+  model: BPM-2023
+  serial_number: SN987654321
+  installation_date: "2023-01-15"
+  last_calibration_date: "2025-06-20"
+  next_calibration_due: "2026-06-20"

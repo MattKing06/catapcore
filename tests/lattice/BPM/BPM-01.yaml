@@ -1,0 +1,31 @@
+controls_information:
+  pv_record_map:
+    X:
+      type: statistical
+      auto_buffer: True
+      buffer_size: 100
+      units: mm
+      description: "X position reading"
+      pv: "BPM-01:X_RB"
+    Y:
+      type: statistical
+      auto_buffer: True
+      buffer_size: 100
+      units: mm
+      description: "X position reading"
+      pv: "BPM-01:Y_VAL"
+  x_calibration_factor: 1.0
+  y_calibration_factor: 1.0023
+properties:
+  name: BPM-01
+  hardware_type: BPM
+  subtype: Standard
+  position: 1.023
+  machine_area: BL01
+  name_alias: BL-01-BPM
+  manufacturer: ACME Instruments
+  model: BPM-2023
+  serial_number: SN123456789
+  installation_date: "2023-01-15"
+  last_calibration_date: "2025-06-20"
+  next_calibration_due: "2027-06-20"
