@@ -9,11 +9,11 @@ Classes:
 """
 
 import warnings
-from common.machine.hardware import Hardware
-from common.machine.area import MachineArea, _string_to_machine_area
-from common.machine.pv_utils import StatisticalPV
-from common.machine.snapshot import Snapshot
-from common.exceptions import (
+from catapcore.common.machine.hardware import Hardware
+from catapcore.common.machine.area import MachineArea, _string_to_machine_area
+from catapcore.common.machine.pv_utils import StatisticalPV
+from catapcore.common.machine.snapshot import Snapshot
+from catapcore.common.exceptions import (
     InvalidHardwareSubtype,
     InvalidHardwareType,
     MachineAreaNotFound,
@@ -25,7 +25,7 @@ from ruamel.yaml import YAML
 from typing import Any, Dict, List, Tuple, Union, Callable, Type
 import os
 from pathlib import Path
-import config as cfg
+import catapcore.config as cfg
 
 
 __all__ = ["Factory"]
