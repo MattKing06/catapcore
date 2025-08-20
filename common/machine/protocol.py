@@ -212,7 +212,10 @@ class PVA(Protocol):
             int: The index of the registered callback.
         """
         # TODO work out whether this will be okay if we keep all the callbacks and just add new ones
-        self._callbacks.append(self._ctx.monitor(self.pvname, callback))
+        request: str = f"field({','.join(['value', 'timeStamp'])})"
+        self._callbacks.append(
+            self._ctx.monitor(name=self.pvname, cb=callback, request=request)
+        )
         return len(self._callbacks) - 1
 
     def remove_callback(self, callback_index: int) -> None:

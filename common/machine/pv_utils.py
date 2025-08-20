@@ -53,6 +53,7 @@ import numpy as np
 # To set the ca.dll path for pyepics from p4p
 import epicscorelibs.path.pyepics  # noqa: F401
 from epics import ca
+from p4p.nt.scalar import ntfloat, ntint
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -561,6 +562,9 @@ class WaveformPV(PVSignal):
     _value: np.ndarray
     """Value of the PV"""
 
+    units: str = "arb. units"
+    """Units of the PV"""
+
     def __init__(self, *args, **kwargs):
         super(WaveformPV, self).__init__(*args, **kwargs)
 
@@ -680,7 +684,9 @@ class StatisticalPV(ScalarPV):
             return f"<StatisticalPV>(name={self._pv.pvname}, buffering={self._is_buffering})"
 
     @use_initial_context
-    def update_stats(self, value: float | int, timestamp: float, **kw):
+    def update_stats(
+        self, value: float | int | ntfloat | ntint, timestamp: float = None, **kw
+    ):
         """
         Update the buffer statistics and push back the buffer deque
 
@@ -689,11 +695,16 @@ class StatisticalPV(ScalarPV):
         :type value: Union[float, int]
         :type timestamp: float
         """
+        if isinstance(value, ntfloat) or isinstance(value, ntint):
+            # Decode the value and timestamp from p4p types to native types
+            timestamp = value.timestamp
+            value = value.real
         self._value = value
         if timestamp:
             self._timestamp = datetime.fromtimestamp(timestamp)
         else:
             self._timestamp = datetime.now()
+        print(f"Updating stats for {self._pv.pvname} with value {value} at {timestamp}")
         self._buffer.append((timestamp, value))
         if abs(value) > abs(self._max):
             self._max = value
