@@ -704,7 +704,6 @@ class StatisticalPV(ScalarPV):
             self._timestamp = datetime.fromtimestamp(timestamp)
         else:
             self._timestamp = datetime.now()
-        print(f"Updating stats for {self._pv.pvname} with value {value} at {timestamp}")
         self._buffer.append((timestamp, value))
         if abs(value) > abs(self._max):
             self._max = value
